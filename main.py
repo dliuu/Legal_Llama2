@@ -1,4 +1,4 @@
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
+from transformers import AutoModelForSequenceClassification, AutoTokenizer, Trainer, TrainingArguments
 import torch
 import evaluate
 import accelerate
@@ -7,11 +7,6 @@ import numpy as np
 import optuna
 import random
 from datasets import load_dataset
-from transformers import Trainer, TrainingArguments
-
-#from petals import AutoDistributedModelForCausalLM
-#from huggingface_hub import login
-#login("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")
 
 print('finished imports')
 
@@ -29,7 +24,7 @@ metric = evaluate.load("accuracy")
 
 
 def get_dataset(path:str, tokenizer:AutoTokenizer):
-    '''Loads dataset, passes it into a tokenizer, pads and truncate data
+    '''Loads dataset from HuggingFace, passes it into a tokenizer, pads and truncates
     '''
     dataset = load_dataset(path)
     random.shuffle(dataset)
@@ -39,11 +34,12 @@ def get_dataset(path:str, tokenizer:AutoTokenizer):
                         batched=True).with_format("torch")
     return dataset
     
-
+def split_dataset(dataset, train_size:float, test_size:float, eval_size:float):
+    train_set, test_set, eval_set = torch.utils.data.random_split(dataset, [train_size, test_size, eval_size])
+    return train_set, test_set, eval_set
 
 def model_init():
     model = "meta-llama/Llama-2-7b-chat-hf"
-
     tokenizer = AutoTokenizer.from_pretrained(model)
 
 
@@ -59,11 +55,14 @@ model_name = "meta-llama/Llama-2-7b-chat-hf"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 tokenizer.add_special_tokens({'pad_token': '<PAD>'})
 
-dataset = get_dataset('dliu1/re_propertytax', tokenizer)
-print(dataset['train'][10])
+dataset = get_dataset('dliu1/re_propertytax', tokenizer=tokenizer)
+print(dataset['train'][10]) #prints tokenized tensor of one entry
 
-train_small_dataset = get_dataset('dliu1/re_propertytax', tokenizer, percent=0.05)
-eval_dataset = get_dataset('dliu1/re_propertytax', tokenizer)
+train_data, test_data, eval_data = split_dataset(dataset, 0.8, 0.1, 0.1)
+
+print(len(dataset))
+#print(len(dataset['test']))
+#print(len(dataset['eval']))
 
 model = AutoModelForSequenceClassification.from_pretrained(model_name).to(device)
 
