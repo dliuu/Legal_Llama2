@@ -6,7 +6,7 @@ import re
 import json
 print('finished imports')
 
-openai.api_key = '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'
+openai.api_key = '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'
 
 def get_completion(role: str, prompt: str, model="gpt-3.5-turbo"):
     '''API call for openai's gpt-3.5-turbo model 
@@ -85,9 +85,14 @@ def dict_to_jsonl(data:dict, output_file:str):
 
 
 
+
+
+#Change These Variables
+file = 'raw_txt_files/real_property_actions.txt'
+output_file_name = 'RealProperty_actions_test.jsonl'
+
 #Main
-file = 'raw_txt_files/real_property.txt'
-prompt_list = split_text(file, 20)
+prompt_list = split_text(file, 10)
 role =  'user'
 
 for idx, prompt in enumerate(prompt_list):
@@ -96,7 +101,7 @@ for idx, prompt in enumerate(prompt_list):
     try:
         response = get_completion(role, 'generate question answer pairs for the following text. Please start every question with Q: and every answer with A: ' + str(prompt))
         completion_dict = completion_to_list(response)
-        dict_to_jsonl(completion_dict, 'RealProperty_test.jsonl')
+        dict_to_jsonl(completion_dict, 'RealProperty_actions_test.jsonl')
 
     except Exception as e:
         print('error: ' + str(e))
