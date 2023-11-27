@@ -12,7 +12,7 @@ def append_jsonl_files(input_files, output_file):
                     output_jsonl.write(line)
 
 # Variables
-input_files = ['instruction/PropertyTax_test.jsonl', 'instruction/RealProperty_actions_test.jsonl', 'instruction/RealProperty_test.jsonl']
-output_file = 'Instruction_Set'
+input_files = ['jsonl/proceedings.jsonl', 'jsonl/PropertyTax.jsonl', 'jsonl/real_property.jsonl']
+output_file = 'RawText_Set.jsonl'
 
 append_jsonl_files(input_files, output_file)

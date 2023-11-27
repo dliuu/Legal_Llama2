@@ -1,8 +1,8 @@
 import json
 import re
 
-filename = "realproperty_actions_proceedings.txt"
-output = 'proceedings.jsonl'
+filename = "raw_txt_files/real_property.txt"
+output = 'real_property.jsonl'
 
 # Generate a list of dictionaries
 lines = []

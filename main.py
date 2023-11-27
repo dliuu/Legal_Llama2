@@ -55,14 +55,14 @@ model_name = "meta-llama/Llama-2-7b-chat-hf"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 tokenizer.add_special_tokens({'pad_token': '<PAD>'})
 
-dataset = get_dataset('dliu1/re_propertytax', tokenizer=tokenizer)
+dataset = get_dataset('dliu1/legal-llama-instruction1', tokenizer=tokenizer)
 print(dataset['train'][10]) #prints tokenized tensor of one entry
 
 train_data, test_data, eval_data = split_dataset(dataset, 0.8, 0.1, 0.1)
 
-print(len(dataset))
-#print(len(dataset['test']))
-#print(len(dataset['eval']))
+print(len(train_data))
+print(len(test_data))
+print(len(eval_data))
 
 model = AutoModelForSequenceClassification.from_pretrained(model_name).to(device)
 
