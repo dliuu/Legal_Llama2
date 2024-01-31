@@ -77,7 +77,6 @@ print('finished')
 
 model = AutoModelForSequenceClassification.from_pretrained(model_name, load_in_8bit=True).to(device)
 
-
 args = TrainingArguments(
         f"{model_name}-RE_Llama",
         evaluation_strategy = "epoch",
